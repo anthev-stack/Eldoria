@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "eldoria-bridge",
+  "version": "${version}",
+  "name": "Eldoria Bridge",
+  "description": "Pushes live LevelZ and Numismatic Overhaul player stats to the Eldoria website via HTTP API.",
+  "authors": ["Eldoria"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "server",
+  "entrypoints": {
+    "server": ["net.eldoria.bridge.EldoriaBridgeMod"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*",
+    "levelz": "*"
+  },
+  "suggests": {
+    "numismatic-overhaul": "*"
+  }
+}

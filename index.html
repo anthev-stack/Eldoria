@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Eldoria — An open-world Minecraft adventure. Level up with LevelZ, explore, and conquer."
+    />
+    <title>Eldoria — Minecraft Server</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <div class="header-left">
+          <a href="/" class="brand">
+            <span id="brand-name">Eldoria</span>
+          </a>
+          <div class="auth-guest" id="auth-guest">
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-create-account">Create account</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-login">Log in</button>
+          </div>
+          <div class="auth-user" id="auth-user" hidden>
+            <img class="auth-avatar" id="auth-avatar" src="" alt="" width="28" height="28" />
+            <button type="button" class="auth-username-btn" id="auth-username-btn">
+              <span class="auth-username" id="auth-username"></span>
+            </button>
+            <span class="auth-role" id="auth-role" hidden></span>
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-logout">Log out</button>
+          </div>
+        </div>
+        <nav class="site-nav" aria-label="Main">
+          <a href="#map">MAP</a>
+          <a href="#news">NEWS</a>
+          <a href="#staff">STAFF</a>
+          <a href="#players">PLAYER STATS</a>
+          <a href="/dashboard.html" id="nav-dashboard" hidden>DASHBOARD</a>
+        </nav>
+        <a href="#join" class="btn btn-primary btn-sm">Join Server</a>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <section class="hero">
+        <div class="container hero-inner">
+          <div class="hero-content">
+            <div class="hero-badge" id="status-badge">
+              <span class="status-dot" id="connection-dot"></span>
+              <span id="status-text">Checking server...</span>
+            </div>
+            <h1 id="hero-title">Eldoria</h1>
+            <p class="hero-tagline" id="hero-tagline">An open-world Adventure — Level, Explore, Conquer</p>
+            <div class="hero-actions">
+              <a href="#join" class="btn btn-primary">Play on Eldoria</a>
+              <a href="#" class="btn btn-secondary" id="modrinth-hero-link" target="_blank" rel="noopener">Download Instance</a>
+            </div>
+          </div>
+          <div class="stat-cards">
+            <div class="stat-card">
+              <span class="stat-value" id="live-players">—</span>
+              <span class="stat-label">Live Players</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value" id="total-players">—</span>
+              <span class="stat-label">Player Base</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value" id="max-players">—</span>
+              <span class="stat-label">Max Slots</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main grid -->
+      <section class="section">
+        <div class="container dashboard">
+          <aside class="sidebar">
+            <div class="card" id="server-info">
+              <div class="card-header">
+                <h2>SERVER INFO</h2>
+              </div>
+              <div class="card-body" id="server-info-body"></div>
+              <div class="card-footer address-row">
+                <code id="server-address">—</code>
+                <button class="btn btn-ghost btn-sm" id="copy-address">Copy</button>
+              </div>
+            </div>
+
+            <div class="card card-compact">
+              <div class="card-body join-card">
+                <h3>READY TO PLAY?</h3>
+                <p>Install the modpack and connect in minutes.</p>
+                <a href="#join" class="btn btn-primary btn-block">Join Now</a>
+              </div>
+            </div>
+          </aside>
+
+          <div class="main-column">
+            <div class="card card-map" id="map">
+              <div class="card-header card-header-row">
+                <h2>LIVE MAP</h2>
+                <a href="#" class="text-link" id="dynmap-fullscreen" target="_blank" rel="noopener">Open full map →</a>
+              </div>
+              <div class="map-frame" id="map-frame">
+                <iframe id="dynmap-iframe" title="Eldoria Dynmap" allowfullscreen></iframe>
+                <div class="map-loader" id="map-loader">
+                  <div class="map-loader-spinner" aria-hidden="true"></div>
+                  <p id="map-loader-text">Loading map…</p>
+                  <button type="button" class="btn btn-secondary btn-sm" id="map-load-btn">Load map</button>
+                </div>
+                <div class="map-fallback-bar" id="map-fallback-bar">
+                  <span>Prefer the full experience?</span>
+                  <a href="#" id="map-fallback-link" target="_blank" rel="noopener">Open live map ↗</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="card card-chat" id="chat">
+              <div class="card-header card-header-row">
+                <h2>LIVE CHAT</h2>
+                <span class="chat-hint" id="chat-hint">Log in with Discord to chat</span>
+              </div>
+              <div class="chat-messages" id="chat-messages">
+                <p class="chat-empty">Loading chat…</p>
+              </div>
+              <form class="chat-form" id="chat-form">
+                <input type="text" class="chat-input" id="chat-input" placeholder="Say something…" maxlength="500" disabled />
+                <button type="submit" class="btn btn-primary btn-sm" id="chat-send" disabled>Send</button>
+              </form>
+            </div>
+          </div>
+
+          <aside class="sidebar sidebar-right">
+            <div class="card" id="news">
+              <div class="card-header">
+                <h2>NEWS</h2>
+              </div>
+              <div class="card-body feed" id="news-feed"></div>
+            </div>
+            <div class="card" id="updates">
+              <div class="card-header">
+                <h2>UPDATES</h2>
+              </div>
+              <div class="card-body feed" id="updates-feed"></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Server Stats -->
+      <section class="section" id="server-stats">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2>SERVER STATS</h2>
+              <p class="section-desc">Economy and playtime across the realm</p>
+            </div>
+          </div>
+          <div class="server-stats-grid">
+            <div class="card server-stat-card">
+              <div class="card-body">
+                <div class="server-stat-currency" id="economy-total">—</div>
+                <span class="server-stat-label">Total Economy</span>
+              </div>
+            </div>
+            <div class="card server-stat-card">
+              <div class="card-body">
+                <span class="server-stat-value" id="playtime-total">—</span>
+                <span class="server-stat-label">Combined Playtime</span>
+                <span class="server-stat-sub" id="playtime-players">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Player Stats -->
+      <section class="section section-alt" id="players">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2>PLAYER STATS</h2>
+              <p class="section-desc">All adventurers who have joined Eldoria</p>
+            </div>
+            <div class="section-meta">
+              <span class="meta-pill" id="stats-updated">Syncing…</span>
+              <input type="search" class="search-input" id="player-search" placeholder="Search players…" />
+            </div>
+          </div>
+          <div class="card card-table">
+            <div class="table-wrap">
+              <table class="stats-table" id="player-stats-table">
+                <thead>
+                  <tr>
+                    <th>Player</th>
+                    <th>Level</th>
+                    <th>XP</th>
+                    <th>Top Skills</th>
+                    <th>Currency</th>
+                    <th>Playtime</th>
+                    <th>Last Seen</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="player-stats-body">
+                  <tr><td colspan="8" class="table-empty">Loading player stats…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Staff -->
+      <section class="section" id="staff">
+        <div class="container">
+          <div class="section-head">
+            <h2>STAFF TEAM</h2>
+            <p class="section-desc">The team keeping Eldoria running</p>
+          </div>
+          <div class="staff-grid" id="staff-grid"></div>
+        </div>
+      </section>
+
+      <!-- Join -->
+      <section class="section section-join" id="join">
+        <div class="container">
+          <div class="section-head">
+            <h2>HOW TO JOIN ELDORIA</h2>
+            <p class="section-desc">Three steps to start your adventure</p>
+          </div>
+          <div class="steps-grid">
+            <div class="card step-card">
+              <span class="step-num">1</span>
+              <h3>Install Modrinth</h3>
+              <p>Download and install Modrinth on your computer.</p>
+              <a href="https://modrinth.com/app" class="btn btn-primary" target="_blank" rel="noopener">Get Modrinth App</a>
+            </div>
+            <div class="card step-card">
+              <span class="step-num">2</span>
+              <h3>Download Modrinth Instance</h3>
+              <p>Install the Eldoria modpack instance from Modrinth.</p>
+              <a href="#" class="btn btn-primary" id="modrinth-link" target="_blank" rel="noopener" download>Download Instance</a>
+            </div>
+            <div class="card step-card">
+              <span class="step-num">3</span>
+              <h3>Launch &amp; Explore</h3>
+              <p>Launch the instance and start exploring. Connect with this server address:</p>
+              <div class="address-box">
+                <code id="join-address">—</code>
+                <button class="btn btn-ghost btn-sm" id="copy-join-address">Copy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>© 2026 Eldoria</span>
+        <div class="footer-status-row">
+          <a href="#" class="footer-discord" id="footer-discord" target="_blank" rel="noopener" aria-label="Join Discord" hidden>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+            </svg>
+          </a>
+          <span id="footer-status">—</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Player detail modal -->
+    <dialog class="modal" id="player-modal">
+      <div class="modal-content">
+        <button class="modal-close" id="modal-close" aria-label="Close">×</button>
+        <div id="player-modal-body"></div>
+      </div>
+    </dialog>
+
+    <script src="/config.js"></script>
+    <script type="module" src="/js/main.js"></script>
+  </body>
+</html>

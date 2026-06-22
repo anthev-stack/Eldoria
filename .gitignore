@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+server/data/site-store.json
+server/data/downloads/
+.DS_Store
+*.log
+.vscode/
+
+# Gradle / Fabric bridge mod
+eldoria-bridge/.gradle/
+eldoria-bridge/build/

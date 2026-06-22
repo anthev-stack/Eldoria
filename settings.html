@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Eldoria — Account settings" />
+    <title>Account Settings — Eldoria</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <div class="header-left">
+          <a href="/" class="brand">
+            <span id="brand-name">Eldoria</span>
+          </a>
+          <div class="auth-guest" id="auth-guest">
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-create-account">Create account</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-login">Log in</button>
+          </div>
+          <div class="auth-user" id="auth-user" hidden>
+            <img class="auth-avatar" id="auth-avatar" src="" alt="" width="28" height="28" />
+            <button type="button" class="auth-username-btn" id="auth-username-btn">
+              <span class="auth-username" id="auth-username"></span>
+            </button>
+            <span class="auth-role" id="auth-role" hidden></span>
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-logout">Log out</button>
+          </div>
+        </div>
+        <nav class="site-nav" aria-label="Main">
+          <a href="/#map">MAP</a>
+          <a href="/#news">NEWS</a>
+          <a href="/#staff">STAFF</a>
+          <a href="/#players">PLAYER STATS</a>
+          <a href="/dashboard.html" id="nav-dashboard" hidden>DASHBOARD</a>
+        </nav>
+        <a href="/#join" class="btn btn-primary btn-sm">Join Server</a>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="section page-section">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2>Account Settings</h2>
+              <p class="section-desc">Manage your Eldoria website profile</p>
+            </div>
+          </div>
+          <div class="card settings-card" id="settings-guest" hidden>
+            <div class="card-body">
+              <p>Log in with Discord to manage your account settings.</p>
+              <button type="button" class="btn btn-primary" id="settings-login-btn">Log in</button>
+            </div>
+          </div>
+          <div class="card settings-card" id="settings-form-wrap" hidden>
+            <div class="card-body settings-body">
+              <div class="settings-profile">
+                <img class="settings-avatar" id="settings-avatar" src="" alt="" width="64" height="64" />
+                <div>
+                  <h3 class="settings-name" id="settings-display-name">—</h3>
+                  <p class="settings-discord">Discord: <span id="settings-discord-name">—</span></p>
+                  <span class="role-badge" id="settings-role-badge" hidden></span>
+                </div>
+              </div>
+              <form id="settings-form" class="auth-form settings-form">
+                <label class="form-label" for="settings-mc-username">Minecraft username</label>
+                <input class="form-input" id="settings-mc-username" type="text" pattern="[a-zA-Z0-9_]{3,16}" maxlength="16" required />
+                <p class="form-hint">This is shown in chat and across the site. Use your exact in-game name.</p>
+                <p class="form-error" id="settings-error"></p>
+                <p class="form-success" id="settings-success" hidden>Saved successfully.</p>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+              </form>
+
+              <div id="settings-staff-section" class="settings-staff-section" hidden>
+                <h3 class="settings-subheading">Staff Blurb</h3>
+                <p class="form-hint">A short line shown under your title on the Staff Team section.</p>
+                <form id="staff-blurb-form" class="auth-form">
+                  <textarea class="form-input" id="settings-staff-blurb" rows="3" maxlength="200" placeholder="Write a short intro…"></textarea>
+                  <p class="form-error" id="staff-blurb-error"></p>
+                  <p class="form-success" id="staff-blurb-success" hidden>Blurb saved.</p>
+                  <button type="submit" class="btn btn-secondary">Save blurb</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>© 2026 Eldoria</span>
+        <div class="footer-status-row">
+          <a href="#" class="footer-discord" id="footer-discord" target="_blank" rel="noopener" aria-label="Join Discord" hidden>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+            </svg>
+          </a>
+          <span id="footer-status">—</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/config.js"></script>
+    <script type="module" src="/js/settings-page.js"></script>
+  </body>
+</html>

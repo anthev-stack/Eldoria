@@ -1,0 +1,25 @@
+{
+  "name": "eldoria-web",
+  "version": "2.0.0",
+  "description": "Eldoria Minecraft Server — modern homepage with LevelZ player stats",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run api\" \"npm run dev:web\"",
+    "dev:web": "node --max-http-header-size=65536 ./node_modules/vite/bin/vite.js",
+    "api": "node --max-http-header-size=65536 --env-file=.env server/index.js",
+    "sync": "node server/sync-levelz.js",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "cookie-session": "^2.1.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "prismarine-nbt": "^2.7.0",
+    "ws": "^8.21.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "vite": "^6.3.5"
+  }
+}
