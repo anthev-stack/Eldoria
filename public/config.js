@@ -45,7 +45,7 @@ window.ELDORIA_CONFIG = {
 
   // Discord invite (optional)
   discord: {
-    url: 'https://discord.gg/eldoria',
+    url: 'https://discord.gg/uZeGNFG3nv',
     enabled: true,
   },
 
