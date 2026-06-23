@@ -36,6 +36,7 @@ const APP_URL = (process.env.APP_URL || 'http://localhost:5173').replace(/\/$/, 
 const PLAYERS_FILE = process.env.PLAYERS_FILE || path.join(__dirname, 'data', 'players.json');
 const MC_HOST = process.env.MC_HOST || '103.15.237.56';
 const MC_PORT = Number(process.env.MC_PORT) || 23383;
+const MC_JOIN_HOST = process.env.MC_JOIN_HOST || 'eldoriarealm.com';
 const SESSION_SECRET = process.env.SESSION_SECRET || 'change-me-in-production';
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID || '';
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET || '';
@@ -146,6 +147,10 @@ async function getPlayersData() {
   return { ...loadLocalPlayers(), source: 'local' };
 }
 
+function mcJoinAddress() {
+  return MC_PORT === 25565 ? MC_JOIN_HOST : `${MC_JOIN_HOST}:${MC_PORT}`;
+}
+
 async function fetchMcStatus() {
   const url = `https://api.mcstatus.io/v2/status/java/${encodeURIComponent(MC_HOST)}:${MC_PORT}`;
   const res = await fetch(url);
@@ -177,7 +182,7 @@ app.get('/api/server', async (_req, res) => {
         totalPlayers: bridgeServer.totalPlayers ?? players.length,
         statsUpdatedAt: bridgeServer.statsUpdatedAt ?? updatedAt,
         economy: normalizeEconomyResponse(bridgeServer.economy) ?? economy,
-        address: MC_PORT === 25565 ? MC_HOST : `${MC_HOST}:${MC_PORT}`,
+        address: mcJoinAddress(),
         source: 'bridge',
       });
     }
@@ -201,7 +206,7 @@ app.get('/api/server', async (_req, res) => {
     playersOnlineList: status.players?.list ?? [],
     statsUpdatedAt: updatedAt,
     economy,
-    address: MC_PORT === 25565 ? MC_HOST : `${MC_HOST}:${MC_PORT}`,
+    address: mcJoinAddress(),
     source,
   });
 });

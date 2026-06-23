@@ -5,10 +5,12 @@ window.ELDORIA_CONFIG = {
   serverName: 'Eldoria',
   tagline: 'An open-world Adventure — Level, Explore, Conquer',
 
-  // Minecraft server address for live player count (Java edition)
+  // Player-facing join address (what appears on the site)
   minecraft: {
-    host: '103.15.237.56',
+    host: 'eldoriarealm.com',
     port: 23383,
+    // Shockbyte IP — used only for client-side status fallback; API uses .env on the server
+    statusHost: '103.15.237.56',
   },
 
   // Website API — in dev, Vite proxies /api → localhost:3001
@@ -27,9 +29,8 @@ window.ELDORIA_CONFIG = {
   dynmap: {
     url: 'http://103.15.237.56:29165/',
     enabled: true,
-    // 'direct' = iframe points at dynmap.url (recommended)
-    // 'proxy'  = iframe uses /dynmap/ (needs reverse proxy in production)
-    mode: 'direct',
+    // 'proxy' = /dynmap/ via Caddy (required for HTTPS site)
+    mode: 'proxy',
   },
 
   // Modrinth modpack — "Join Now" button destination

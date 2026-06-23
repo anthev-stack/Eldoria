@@ -461,9 +461,10 @@ async function fetchPlayers() {
 }
 
 async function fetchPlayerCountFallback() {
-  const { host, port } = config.minecraft;
+  const { host, port, statusHost } = config.minecraft;
+  const queryHost = statusHost || host;
   try {
-    const res = await fetch(`https://api.mcstatus.io/v2/status/java/${encodeURIComponent(host)}:${port}`);
+    const res = await fetch(`https://api.mcstatus.io/v2/status/java/${encodeURIComponent(queryHost)}:${port}`);
     if (!res.ok) throw new Error();
     const data = await res.json();
     $('live-players').textContent = data.online ? data.players.online : '—';
