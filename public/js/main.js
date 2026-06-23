@@ -1,8 +1,10 @@
 import { initAuth } from './auth.js';
 import { initChat } from './chat.js';
 import { initLayout } from './layout.js';
+import { resolveCurrency, aggregateEconomy, formatGoldNetworth } from './currency.js';
 
 const config = window.ELDORIA_CONFIG;
+const CURRENCY_ICON_BASE = '/images/currency';
 
 let allPlayers = [];
 
@@ -37,8 +39,6 @@ function formatPlaytimeLong(minutes) {
   return parts.join(' ');
 }
 
-const CURRENCY_ICON_BASE = '/images/currency';
-
 function currencyCoinImg(type) {
   return `<img class="currency-coin currency-coin-${type}" src="${CURRENCY_ICON_BASE}/${type}.png" alt="" loading="lazy" decoding="async" />`;
 }
@@ -48,12 +48,8 @@ function currencyPart(amount, type) {
 }
 
 function formatCurrency(currency) {
-  const value = currency?.value ?? currency?.totalValue ?? 0;
+  const { value, gold, silver, bronze } = resolveCurrency(currency ?? {});
   if (!value) return '—';
-  const gold = currency?.gold ?? Math.floor(value / 10000);
-  const remainder = value % 10000;
-  const silver = currency?.silver ?? Math.floor(remainder / 100);
-  const bronze = currency?.bronze ?? remainder % 100;
   const parts = [];
   if (gold) parts.push(currencyPart(gold, 'gold'));
   if (silver) parts.push(currencyPart(silver, 'silver'));
@@ -62,12 +58,8 @@ function formatCurrency(currency) {
 }
 
 function renderCurrencyStack(currency) {
-  const value = currency?.value ?? 0;
+  const { value, gold, silver, bronze } = resolveCurrency(currency ?? {});
   if (!value) return '<span class="currency-stack-empty">—</span>';
-  const gold = currency?.gold ?? Math.floor(value / 10000);
-  const remainder = value % 10000;
-  const silver = currency?.silver ?? Math.floor(remainder / 100);
-  const bronze = currency?.bronze ?? remainder % 100;
   const rows = [
     ['bronze', bronze],
     ['silver', silver],
@@ -84,13 +76,19 @@ function renderCurrencyStack(currency) {
     .join('')}</div>`;
 }
 
+function renderCurrencyRowParts({ gold = 0, silver = 0, bronze = 0 }, order = 'bsg') {
+  const orderMap = {
+    bsg: [['bronze', bronze], ['silver', silver], ['gold', gold]],
+    gsb: [['gold', gold], ['silver', silver], ['bronze', bronze]],
+  };
+  const parts = orderMap[order] ?? orderMap.bsg;
+  if (!gold && !silver && !bronze) return '<span class="currency-stack-empty">—</span>';
+  return `<div class="currency-row">${parts.map(([type, amount]) => currencyPart(amount, type)).join('')}</div>`;
+}
+
 function renderCurrencyRow(currency) {
-  const value = currency?.value ?? currency?.totalValue ?? 0;
+  const { value, gold, silver, bronze } = resolveCurrency(currency ?? {});
   if (!value) return '<span class="currency-stack-empty">—</span>';
-  const gold = currency?.gold ?? Math.floor(value / 10000);
-  const remainder = value % 10000;
-  const silver = currency?.silver ?? Math.floor(remainder / 100);
-  const bronze = currency?.bronze ?? remainder % 100;
   const parts = [
     ['bronze', bronze],
     ['silver', silver],
@@ -114,11 +112,21 @@ function headUrl(name) {
 
 function initBranding() {
   document.title = `${config.serverName} — Minecraft Server`;
-  $('brand-name').textContent = config.serverName;
+  const brandEl = $('brand-name');
+  if (brandEl) {
+    brandEl.textContent = config.serverName;
+    if (document.body.classList.contains('page-home') && config.serverName === 'Eldoria') {
+      brandEl.classList.add('eldoria-word');
+    }
+  }
   $('hero-title').textContent = config.serverName;
   $('hero-tagline').textContent = config.tagline;
   $('server-address').textContent = getServerAddress();
   $('join-address').textContent = getServerAddress();
+
+  if (document.body.classList.contains('page-home') && config.serverName === 'Eldoria') {
+    $('hero-title')?.classList.add('eldoria-word');
+  }
 }
 
 function initServerInfo() {
@@ -150,6 +158,12 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
+function formatHomeText(str) {
+  const safe = escapeHtml(str);
+  if (!document.body.classList.contains('page-home')) return safe;
+  return safe.replace(/Eldoria/g, '<span class="eldoria-word">Eldoria</span>');
+}
+
 function initNews() {
   fetchNews();
   window.addEventListener('eldoria:news-updated', fetchNews);
@@ -179,8 +193,8 @@ async function fetchNews() {
         <time class="feed-date" datetime="${item.date}">${formatDate(item.date)}</time>
         <span class="feed-tag ${item.tag}">${item.tag}</span>
       </div>
-      <h3 class="feed-title">${escapeHtml(item.title)}</h3>
-      <p class="feed-excerpt">${escapeHtml(item.excerpt)}</p>
+      <h3 class="feed-title">${formatHomeText(item.title)}</h3>
+      <p class="feed-excerpt">${formatHomeText(item.excerpt)}</p>
     </article>`
       )
       .join('');
@@ -209,7 +223,7 @@ async function fetchUpdates() {
         <time class="feed-date" datetime="${item.date}">${formatDate(item.date)}</time>
       </div>
       <ul class="update-changes">
-        ${item.changes.map((c) => `<li>${escapeHtml(c)}</li>`).join('')}
+        ${item.changes.map((c) => `<li>${formatHomeText(c)}</li>`).join('')}
       </ul>
     </article>`
       )
@@ -347,28 +361,38 @@ function filterPlayers(query) {
   renderPlayerStats(filtered);
 }
 
-function aggregateEconomyFromPlayers(players) {
-  const totalValue = players.reduce((sum, p) => sum + (p.currency?.value ?? 0), 0);
-  const totalPlaytimeMinutes = players.reduce((sum, p) => sum + (p.playtimeMinutes ?? 0), 0);
-  const gold = Math.floor(totalValue / 10000);
-  const remainder = totalValue % 10000;
-  const silver = Math.floor(remainder / 100);
-  const bronze = remainder % 100;
-  return { totalValue, gold, silver, bronze, totalPlaytimeMinutes };
+function economyForDisplay(fallbackEconomy) {
+  if (allPlayers.length) return aggregateEconomy(allPlayers);
+  if (!fallbackEconomy) return null;
+  const converted = resolveCurrency(fallbackEconomy);
+  const raw = fallbackEconomy.raw ?? {
+    gold: Number(fallbackEconomy.rawGold ?? converted.gold),
+    silver: Number(fallbackEconomy.rawSilver ?? converted.silver),
+    bronze: Number(fallbackEconomy.rawBronze ?? converted.bronze),
+  };
+  return {
+    raw,
+    gold: converted.gold,
+    silver: converted.silver,
+    bronze: converted.bronze,
+    value: converted.value,
+    totalValue: converted.totalValue ?? converted.value,
+    totalPlaytimeMinutes: fallbackEconomy.totalPlaytimeMinutes ?? 0,
+  };
 }
 
 function renderServerEconomy(economy, playerCount = 0) {
   if (!economy) return;
   const economyTotal = $('economy-total');
+  const economyConverted = $('economy-converted');
   const playtimeTotal = $('playtime-total');
   const playtimePlayers = $('playtime-players');
-  if (economyTotal) {
-    economyTotal.innerHTML = renderCurrencyRow({
-      value: economy.totalValue,
-      gold: economy.gold,
-      silver: economy.silver,
-      bronze: economy.bronze,
-    });
+  if (economyTotal && economy.raw) {
+    economyTotal.innerHTML = renderCurrencyRowParts(economy.raw, 'bsg');
+  }
+  if (economyConverted) {
+    const networth = formatGoldNetworth(economy.totalValue ?? economy.value ?? 0);
+    economyConverted.innerHTML = `<span class="economy-networth">${currencyPart(networth, 'gold')}</span>`;
   }
   if (playtimeTotal) playtimeTotal.textContent = formatPlaytimeLong(economy.totalPlaytimeMinutes);
   if (playtimePlayers) {
@@ -404,7 +428,7 @@ async function fetchServerStats() {
       $('stats-updated').textContent = `Updated ${formatDate(data.statsUpdatedAt)}`;
     }
 
-    renderServerEconomy(data.economy, data.totalPlayers ?? allPlayers.length);
+    renderServerEconomy(economyForDisplay(data.economy), data.totalPlayers ?? allPlayers.length);
 
     const onlineNames = new Set((data.playersOnlineList ?? []).map((p) => p.name_clean ?? p.name));
     renderPlayerStats(allPlayers, onlineNames);
@@ -421,10 +445,7 @@ async function fetchPlayers() {
     const data = await res.json();
     allPlayers = data.players ?? [];
     renderPlayerStats(allPlayers);
-    renderServerEconomy(
-      aggregateEconomyFromPlayers(allPlayers),
-      allPlayers.length
-    );
+    renderServerEconomy(aggregateEconomy(allPlayers), allPlayers.length);
     if (data.updatedAt) {
       $('stats-updated').textContent = `Updated ${formatDate(data.updatedAt)}`;
     }

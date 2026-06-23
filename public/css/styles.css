@@ -33,6 +33,7 @@
   --radius-sm: 8px;
   --shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
   --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Jim Nightshade', cursive;
   --header-h: 64px;
 }
 
@@ -157,12 +158,11 @@ a:hover { color: var(--brand-hover); }
   padding: 0.45rem 0.75rem;
   border-radius: var(--radius-sm);
   text-decoration: none;
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.15s;
 }
 
 .site-nav a:hover {
   color: var(--text);
-  background: var(--surface);
 }
 
 .nav-toggle {
@@ -350,7 +350,6 @@ a:hover { color: var(--brand-hover); }
 
 .site-nav a.nav-active {
   color: var(--text);
-  background: var(--surface);
 }
 
 .section-head {
@@ -457,11 +456,26 @@ a:hover { color: var(--brand-hover); }
   box-shadow: 0 0 0 3px var(--brand-dim);
 }
 
+.section-home-grid > .container {
+  padding-left: clamp(1.25rem, 3vw, 2.75rem);
+  padding-right: clamp(1.25rem, 3vw, 2.75rem);
+}
+
 .dashboard {
   display: grid;
-  grid-template-columns: 260px 1fr 280px;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr) minmax(0, 280px);
   gap: 1.25rem;
   align-items: start;
+  width: 100%;
+  min-width: 0;
+}
+
+.dashboard > *,
+.sidebar,
+.main-column,
+.sidebar-right {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .sidebar { display: flex; flex-direction: column; gap: 1.25rem; }
@@ -473,6 +487,8 @@ a:hover { color: var(--brand-hover); }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .card-header {
@@ -489,6 +505,8 @@ a:hover { color: var(--brand-hover); }
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .card-body { padding: 1rem 1.15rem; }
@@ -498,6 +516,27 @@ a:hover { color: var(--brand-hover); }
 .join-card h3 {
   font-size: 1rem;
   margin-bottom: 0.35rem;
+}
+
+/* Jim Nightshade — homepage "Eldoria" word only */
+.page-home .eldoria-word {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+.page-home .hero h1.eldoria-word {
+  font-weight: 400;
+  font-size: clamp(3rem, 9vw, 4.5rem);
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+}
+
+.page-home .brand .eldoria-word {
+  font-weight: 400;
+}
+
+.page-home .eldoria-word--inline {
+  font-size: 1.22em;
 }
 
 .join-card p {
@@ -1113,12 +1152,24 @@ a:hover { color: var(--brand-hover); }
 
 @media (max-width: 1024px) {
   .dashboard {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
-  .main-column { grid-column: 1 / -1; order: -1; }
+  .main-column {
+    grid-column: 1 / -1;
+    order: -1;
+  }
 }
 
 @media (max-width: 768px) {
+  .page-home {
+    overflow-x: clip;
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
   .site-nav { display: none; }
   .site-nav.open {
     display: flex;
@@ -1133,12 +1184,55 @@ a:hover { color: var(--brand-hover); }
   }
   .nav-toggle { display: flex; }
   .header-inner .btn-primary.btn-sm { display: none; }
-  .dashboard { grid-template-columns: 1fr; }
+  .header-inner {
+    gap: 0.75rem;
+  }
+  .header-left {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  .dashboard {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+  .card-header {
+    padding: 0.85rem 1rem;
+  }
+  .card-body,
+  .card-footer,
+  .card-compact .card-body {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .card-map .map-frame {
+    min-height: 240px;
+    aspect-ratio: 4 / 3;
+  }
+  .card-header-row .text-link,
+  .chat-hint {
+    font-size: 0.72rem;
+  }
+  .address-row {
+    flex-wrap: wrap;
+  }
+  .address-row code {
+    min-width: 0;
+    word-break: break-all;
+  }
+  .chat-form {
+    padding: 0.75rem 1rem;
+  }
   .stat-cards { width: 100%; }
   .stat-card { flex: 1; min-width: 100px; }
   .modal-skills-grid { grid-template-columns: 1fr; }
   .stats-table th:nth-child(6),
   .stats-table td:nth-child(6) { display: none; }
+  .hero {
+    padding: 2.5rem 0 2rem;
+  }
+  .hero-inner {
+    gap: 1.25rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1566,6 +1660,27 @@ a:hover { color: var(--brand-hover); }
   color: var(--text-dim);
 }
 
+.server-stat-converted {
+  margin-top: 0.35rem;
+}
+
+.server-stat-converted .economy-networth .currency-part {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.server-stat-converted .economy-networth .currency-amount {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.server-stat-converted .economy-networth .currency-coin {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
 .currency-badge {
   display: inline-flex;
   align-items: center;
@@ -1757,10 +1872,12 @@ a:hover { color: var(--brand-hover); }
   display: flex;
   gap: 0.5rem;
   padding: 0.85rem 1.15rem;
+  min-width: 0;
 }
 
 .chat-input {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);

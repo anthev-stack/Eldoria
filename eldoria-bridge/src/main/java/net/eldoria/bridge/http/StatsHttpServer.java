@@ -172,17 +172,28 @@ public class StatsHttpServer {
     }
 
     private Map<String, Object> aggregateEconomy() {
-        long totalValue = 0;
+        int totalGold = 0;
+        int totalSilver = 0;
+        int totalBronze = 0;
         long totalPlaytime = 0;
 
         for (PlayerRecord record : registry.all()) {
-            totalValue += record.currencyValue;
+            totalGold += record.currencyGold;
+            totalSilver += record.currencySilver;
+            totalBronze += record.currencyBronze;
             totalPlaytime += record.playtimeMinutes;
         }
 
-        NumismaticReader.CurrencySnapshot totals = NumismaticReader.fromRawValue(totalValue);
+        NumismaticReader.CurrencySnapshot totals = NumismaticReader.fromRawValue(
+                (long) totalGold * 10000 + (long) totalSilver * 100 + totalBronze
+        );
+        Map<String, Object> raw = new HashMap<>();
+        raw.put("gold", totalGold);
+        raw.put("silver", totalSilver);
+        raw.put("bronze", totalBronze);
         Map<String, Object> economy = new HashMap<>();
-        economy.put("totalValue", totalValue);
+        economy.put("raw", raw);
+        economy.put("totalValue", totals.value);
         economy.put("gold", totals.gold);
         economy.put("silver", totals.silver);
         economy.put("bronze", totals.bronze);

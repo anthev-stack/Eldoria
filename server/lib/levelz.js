@@ -105,13 +105,48 @@ export function splitCurrencyValue(value) {
   const remainder = total % 10000;
   const silver = Math.floor(remainder / 100);
   const bronze = remainder % 100;
-  return { value: total, gold, silver, bronze };
+  return { value: total, totalValue: total, gold, silver, bronze };
+}
+
+/** Sum coin columns then carry bronze→silver and silver→gold (Numismatic rules). */
+export function normalizeCurrencyParts(gold = 0, silver = 0, bronze = 0) {
+  let b = Math.max(0, Number(bronze) || 0);
+  let s = Math.max(0, Number(silver) || 0) + Math.floor(b / 100);
+  b %= 100;
+  const g = Math.max(0, Number(gold) || 0) + Math.floor(s / 100);
+  s %= 100;
+  return splitCurrencyValue(g * 10000 + s * 100 + b);
 }
 
 export function aggregateEconomy(players) {
-  const totalValue = players.reduce((sum, player) => sum + (player.currency?.value ?? 0), 0);
+  const raw = players.reduce(
+    (acc, player) => {
+      const value = Number(player.currency?.value ?? 0);
+      const parts = value > 0
+        ? splitCurrencyValue(value)
+        : normalizeCurrencyParts(
+            player.currency?.gold,
+            player.currency?.silver,
+            player.currency?.bronze
+          );
+      acc.gold += parts.gold;
+      acc.silver += parts.silver;
+      acc.bronze += parts.bronze;
+      return acc;
+    },
+    { gold: 0, silver: 0, bronze: 0 }
+  );
+  const converted = normalizeCurrencyParts(raw.gold, raw.silver, raw.bronze);
   const totalPlaytimeMinutes = players.reduce((sum, player) => sum + (player.playtimeMinutes ?? 0), 0);
-  return { ...splitCurrencyValue(totalValue), totalPlaytimeMinutes };
+  return {
+    raw,
+    gold: converted.gold,
+    silver: converted.silver,
+    bronze: converted.bronze,
+    value: converted.value,
+    totalValue: converted.value,
+    totalPlaytimeMinutes,
+  };
 }
 
 export function formatCurrency(currency) {

@@ -11,19 +11,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Jim+Nightshade&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
-  <body>
+  <body class="page-home">
     <header class="site-header">
       <div class="container header-inner">
         <div class="header-left">
-          <a href="/" class="brand">
-            <span id="brand-name">Eldoria</span>
-          </a>
           <div class="auth-guest" id="auth-guest">
             <button type="button" class="btn btn-ghost btn-sm" id="btn-create-account">Create account</button>
             <button type="button" class="btn btn-ghost btn-sm" id="btn-login">Log in</button>
@@ -38,11 +35,12 @@
           </div>
         </div>
         <nav class="site-nav" aria-label="Main">
-          <a href="#map">MAP</a>
-          <a href="#news">NEWS</a>
-          <a href="#staff">STAFF</a>
-          <a href="#players">PLAYER STATS</a>
-          <a href="/dashboard.html" id="nav-dashboard" hidden>DASHBOARD</a>
+          <a href="#map">Map</a>
+          <a href="#news">News</a>
+          <a href="#staff">Staff</a>
+          <a href="#server-stats">Server stats</a>
+          <a href="#players">Player stats</a>
+          <a href="/dashboard.html" id="nav-dashboard" hidden>Dashboard</a>
         </nav>
         <a href="#join" class="btn btn-primary btn-sm">Join Server</a>
         <button class="nav-toggle" id="nav-toggle" aria-label="Open menu">
@@ -60,10 +58,10 @@
               <span class="status-dot" id="connection-dot"></span>
               <span id="status-text">Checking server...</span>
             </div>
-            <h1 id="hero-title">Eldoria</h1>
+            <h1 id="hero-title" class="eldoria-word">Eldoria</h1>
             <p class="hero-tagline" id="hero-tagline">An open-world Adventure — Level, Explore, Conquer</p>
             <div class="hero-actions">
-              <a href="#join" class="btn btn-primary">Play on Eldoria</a>
+              <a href="#join" class="btn btn-primary">Play now</a>
               <a href="#" class="btn btn-secondary" id="modrinth-hero-link" target="_blank" rel="noopener">Download Instance</a>
             </div>
           </div>
@@ -85,12 +83,13 @@
       </section>
 
       <!-- Main grid -->
-      <section class="section">
-        <div class="container dashboard">
+      <section class="section section-home-grid">
+        <div class="container">
+          <div class="dashboard">
           <aside class="sidebar">
             <div class="card" id="server-info">
               <div class="card-header">
-                <h2>SERVER INFO</h2>
+                <h2>Server info</h2>
               </div>
               <div class="card-body" id="server-info-body"></div>
               <div class="card-footer address-row">
@@ -101,7 +100,7 @@
 
             <div class="card card-compact">
               <div class="card-body join-card">
-                <h3>READY TO PLAY?</h3>
+                <h3>Ready to play?</h3>
                 <p>Install the modpack and connect in minutes.</p>
                 <a href="#join" class="btn btn-primary btn-block">Join Now</a>
               </div>
@@ -111,7 +110,7 @@
           <div class="main-column">
             <div class="card card-map" id="map">
               <div class="card-header card-header-row">
-                <h2>LIVE MAP</h2>
+                <h2>Live map</h2>
                 <a href="#" class="text-link" id="dynmap-fullscreen" target="_blank" rel="noopener">Open full map →</a>
               </div>
               <div class="map-frame" id="map-frame">
@@ -130,7 +129,7 @@
 
             <div class="card card-chat" id="chat">
               <div class="card-header card-header-row">
-                <h2>LIVE CHAT</h2>
+                <h2>Live chat</h2>
                 <span class="chat-hint" id="chat-hint">Log in with Discord to chat</span>
               </div>
               <div class="chat-messages" id="chat-messages">
@@ -146,17 +145,18 @@
           <aside class="sidebar sidebar-right">
             <div class="card" id="news">
               <div class="card-header">
-                <h2>NEWS</h2>
+                <h2>News</h2>
               </div>
               <div class="card-body feed" id="news-feed"></div>
             </div>
             <div class="card" id="updates">
               <div class="card-header">
-                <h2>UPDATES</h2>
+                <h2>Updates</h2>
               </div>
               <div class="card-body feed" id="updates-feed"></div>
             </div>
           </aside>
+          </div>
         </div>
       </section>
 
@@ -165,7 +165,7 @@
         <div class="container">
           <div class="section-head">
             <div>
-              <h2>SERVER STATS</h2>
+              <h2>Server stats</h2>
               <p class="section-desc">Economy and playtime across the realm</p>
             </div>
           </div>
@@ -174,6 +174,7 @@
               <div class="card-body">
                 <div class="server-stat-currency" id="economy-total">—</div>
                 <span class="server-stat-label">Total Economy</span>
+                <div class="server-stat-sub server-stat-converted" id="economy-converted">—</div>
               </div>
             </div>
             <div class="card server-stat-card">
@@ -192,8 +193,8 @@
         <div class="container">
           <div class="section-head">
             <div>
-              <h2>PLAYER STATS</h2>
-              <p class="section-desc">All adventurers who have joined Eldoria</p>
+              <h2>Player stats</h2>
+              <p class="section-desc">All adventurers who have joined <span class="eldoria-word eldoria-word--inline">Eldoria</span></p>
             </div>
             <div class="section-meta">
               <span class="meta-pill" id="stats-updated">Syncing…</span>
@@ -228,8 +229,8 @@
       <section class="section" id="staff">
         <div class="container">
           <div class="section-head">
-            <h2>STAFF TEAM</h2>
-            <p class="section-desc">The team keeping Eldoria running</p>
+            <h2>Staff team</h2>
+            <p class="section-desc">The team keeping <span class="eldoria-word">Eldoria</span> running</p>
           </div>
           <div class="staff-grid" id="staff-grid"></div>
         </div>
@@ -239,7 +240,7 @@
       <section class="section section-join" id="join">
         <div class="container">
           <div class="section-head">
-            <h2>HOW TO JOIN ELDORIA</h2>
+            <h2>How to join <span class="eldoria-word">Eldoria</span></h2>
             <p class="section-desc">Three steps to start your adventure</p>
           </div>
           <div class="steps-grid">
@@ -252,7 +253,7 @@
             <div class="card step-card">
               <span class="step-num">2</span>
               <h3>Download Modrinth Instance</h3>
-              <p>Install the Eldoria modpack instance from Modrinth.</p>
+              <p>Install the <span class="eldoria-word">Eldoria</span> modpack instance from Modrinth.</p>
               <a href="#" class="btn btn-primary" id="modrinth-link" target="_blank" rel="noopener" download>Download Instance</a>
             </div>
             <div class="card step-card">
