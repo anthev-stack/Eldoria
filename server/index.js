@@ -94,6 +94,7 @@ app.use(
     maxAge: 30 * 24 * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: 'lax',
+    path: '/api',
   })
 );
 
@@ -148,7 +149,7 @@ async function getPlayersData() {
 }
 
 function mcJoinAddress() {
-  return MC_PORT === 25565 ? MC_JOIN_HOST : `${MC_JOIN_HOST}:${MC_PORT}`;
+  return MC_JOIN_HOST;
 }
 
 async function fetchMcStatus() {

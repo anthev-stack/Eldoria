@@ -3,9 +3,9 @@
 
 window.ELDORIA_CONFIG = {
   serverName: 'Eldoria',
-  tagline: 'An open-world Adventure — Level, Explore, Conquer',
+  tagline: 'An open-world adventure — Level, Explore, Conquer',
 
-  // Player-facing join address (what appears on the site)
+  // Player-facing join address (what appears on the site — port is for status queries only)
   minecraft: {
     host: 'eldoriarealm.com',
     port: 23383,
@@ -29,7 +29,7 @@ window.ELDORIA_CONFIG = {
   dynmap: {
     url: 'http://103.15.237.56:29165/',
     enabled: true,
-    // 'proxy' = /dynmap/ via Caddy (required for HTTPS site)
+    // 'proxy' = /dynmap/ via Caddy on HTTPS only; local HTTP embeds dynmap.url directly
     mode: 'proxy',
   },
 

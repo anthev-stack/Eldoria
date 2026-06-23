@@ -5,7 +5,8 @@ function $(id) {
 }
 
 export function initBranding() {
-  $('brand-name').textContent = config.serverName;
+  const brandEl = $('brand-name');
+  if (brandEl) brandEl.textContent = config.serverName;
 }
 
 export function initFooterLinks() {

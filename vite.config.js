@@ -16,6 +16,12 @@ const proxy = {
     target: DYNMAP_TARGET,
     changeOrigin: true,
     rewrite: (path) => path.replace(/^\/dynmap/, ''),
+    configure: (proxy) => {
+      proxy.on('proxyReq', (proxyReq) => {
+        // Dynmap's embedded server rejects large Cookie headers (HTTP 431).
+        proxyReq.removeHeader('cookie');
+      });
+    },
   },
 };
 

@@ -529,6 +529,8 @@ a:hover { color: var(--brand-hover); }
   font-size: clamp(3rem, 9vw, 4.5rem);
   letter-spacing: 0.02em;
   line-height: 1.05;
+  padding-top: 8px;
+  margin-bottom: 0.4rem;
 }
 
 .page-home .brand .eldoria-word {
@@ -1114,6 +1116,10 @@ a:hover { color: var(--brand-hover); }
   font-size: 0.85rem;
   color: var(--text-muted);
   margin-bottom: 1rem;
+}
+
+.step-card .eldoria-word--inline {
+  font-size: 1.35em;
 }
 
 .address-box {

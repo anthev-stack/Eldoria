@@ -68,7 +68,15 @@ WORLD_PATH=/path/to/your/world npm run sync
 
 1. `npm run build` → deploy `dist/`
 2. Run `npm run api` on your server (or proxy `/api` to it)
-3. Set up a reverse proxy for `/dynmap` if using HTTPS
+3. Set up a reverse proxy for `/dynmap` if using HTTPS. Strip cookies on that route so Dynmap does not return HTTP 431:
+
+```caddy
+handle_path /dynmap* {
+    reverse_proxy http://YOUR_DYNMAP_HOST:29165 {
+        header_up -Cookie
+    }
+}
+```
 4. Schedule `npm run sync` on the game server
 
 ## LevelZ skills tracked

@@ -98,8 +98,7 @@ function renderCurrencyRow(currency) {
 }
 
 function getServerAddress() {
-  const { host, port } = config.minecraft;
-  return port && port !== 25565 ? `${host}:${port}` : host;
+  return config.minecraft.host;
 }
 
 function getApiBase() {
@@ -480,7 +479,11 @@ async function fetchPlayerCountFallback() {
 
 function getDynmapUrl(dynmap) {
   const base = dynmap.url.replace(/\/?$/, '/');
-  if (dynmap.mode === 'proxy') return '/dynmap/';
+  // HTTPS needs same-origin proxy (mixed content). HTTP (local dev) embeds directly
+  // so site cookies are not forwarded to Dynmap (avoids HTTP 431).
+  if (dynmap.mode === 'proxy' && window.location.protocol === 'https:') {
+    return '/dynmap/';
+  }
   if (dynmap.embedUrl) return dynmap.embedUrl.replace(/\/?$/, '/');
   return base;
 }
