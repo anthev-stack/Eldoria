@@ -45,6 +45,7 @@ const DISCORD_REDIRECT_URI =
 
 const BRIDGE_URL = (process.env.BRIDGE_URL || 'http://103.15.237.56:26871').replace(/\/$/, '');
 const BRIDGE_API_KEY = process.env.BRIDGE_API_KEY || '';
+const DYNMAP_URL = (process.env.DYNMAP_URL || 'http://103.15.237.56:29165').replace(/\/$/, '');
 
 const SEED_NEWS = [
   {
@@ -97,6 +98,41 @@ app.use(
     path: '/api',
   })
 );
+
+app.use('/dynmap', (req, res) => {
+  if (req.originalUrl === '/dynmap') {
+    res.redirect(301, '/dynmap/');
+    return;
+  }
+
+  const path = req.url.startsWith('/') ? req.url : `/${req.url}`;
+  const target = new URL(path || '/', `${DYNMAP_URL}/`);
+
+  const headers = { ...req.headers, host: target.host };
+  delete headers.cookie;
+  delete headers.connection;
+
+  const proxyReq = http.request(
+    {
+      hostname: target.hostname,
+      port: target.port || 80,
+      path: `${target.pathname}${target.search}`,
+      method: req.method,
+      headers,
+    },
+    (proxyRes) => {
+      res.writeHead(proxyRes.statusCode, proxyRes.headers);
+      proxyRes.pipe(res);
+    }
+  );
+
+  proxyReq.on('error', (err) => {
+    console.warn('Dynmap proxy error:', err.message);
+    if (!res.headersSent) res.status(502).send('Dynmap unavailable');
+  });
+
+  req.pipe(proxyReq);
+});
 
 const wsClients = new Set();
 

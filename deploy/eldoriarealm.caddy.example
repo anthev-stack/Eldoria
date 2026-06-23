@@ -1,0 +1,25 @@
+# Example Caddy site config for eldoriarealm.com
+# Install: sudo cp deploy/eldoriarealm.caddy.example /etc/caddy/Caddyfile.d/eldoriarealm.caddy
+#          sudo caddy validate --config /etc/caddy/Caddyfile
+#          sudo systemctl reload caddy
+
+eldoriarealm.com {
+	root * /var/www/eldoriaweb/dist
+
+	# API, WebSocket, and Dynmap (Dynmap is proxied by the API with path stripping)
+	handle /api/* {
+		reverse_proxy localhost:3003
+	}
+	handle /ws {
+		reverse_proxy localhost:3003
+	}
+	handle /dynmap* {
+		reverse_proxy localhost:3003
+	}
+
+	# Static site (keep after /api, /ws, and /dynmap handlers)
+	handle {
+		try_files {path} /index.html
+		file_server
+	}
+}

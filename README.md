@@ -68,14 +68,27 @@ WORLD_PATH=/path/to/your/world npm run sync
 
 1. `npm run build` → deploy `dist/`
 2. Run `npm run api` on your server (or proxy `/api` to it)
-3. Set up a reverse proxy for `/dynmap` if using HTTPS. Strip cookies on that route so Dynmap does not return HTTP 431:
+3. Proxy `/dynmap` through the **API** (the API strips `/dynmap` and forwards to your map server). Do **not** point Caddy straight at Dynmap — that causes HTTP 404.
 
 ```caddy
-handle_path /dynmap* {
-    reverse_proxy http://YOUR_DYNMAP_HOST:29165 {
-        header_up -Cookie
-    }
+handle /dynmap* {
+    reverse_proxy localhost:3003
 }
+```
+
+Place that block **before** your `file_server` / `try_files` handler, alongside `/api` and `/ws`. See `deploy/eldoriarealm.caddy.example` for a full site config.
+
+After `git pull` on Vultr, restart the API and reload Caddy:
+
+```bash
+cd /var/www/eldoriaweb
+git pull
+npm run build
+pm2 restart eldoria-api
+sudo caddy validate --config /etc/caddy/Caddyfile
+sudo systemctl reload caddy
+curl -I https://eldoriarealm.com/dynmap/
+# Expect: HTTP/2 200
 ```
 4. Schedule `npm run sync` on the game server
 

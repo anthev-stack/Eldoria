@@ -3,7 +3,11 @@
 
 window.ELDORIA_CONFIG = {
   serverName: 'Eldoria',
-  tagline: 'An open-world adventure — Level, Explore, Conquer',
+  pageTitle: 'An open-world adventure',
+  tagline: 'An open-world minecraft adventure — Level, Explore, Conquer',
+  siteUrl: 'https://eldoriarealm.com',
+  shareDescription:
+    'An open-world minecraft adventure — level up with LevelZ, explore the realm, and conquer with friends.',
 
   // Player-facing join address (what appears on the site — port is for status queries only)
   minecraft: {

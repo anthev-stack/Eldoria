@@ -110,7 +110,8 @@ function headUrl(name) {
 }
 
 function initBranding() {
-  document.title = `${config.serverName} — Minecraft Server`;
+  const pageTitle = config.pageTitle ?? 'An open-world adventure';
+  document.title = `${config.serverName} — ${pageTitle}`;
   const brandEl = $('brand-name');
   if (brandEl) {
     brandEl.textContent = config.serverName;
