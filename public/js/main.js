@@ -387,8 +387,13 @@ function renderServerEconomy(economy, playerCount = 0) {
   const economyConverted = $('economy-converted');
   const playtimeTotal = $('playtime-total');
   const playtimePlayers = $('playtime-players');
-  if (economyTotal && economy.raw) {
-    economyTotal.innerHTML = renderCurrencyRowParts(economy.raw, 'bsg');
+  if (economyTotal) {
+    const raw = economy.raw ?? {
+      gold: economy.gold ?? 0,
+      silver: economy.silver ?? 0,
+      bronze: economy.bronze ?? 0,
+    };
+    economyTotal.innerHTML = renderCurrencyRowParts(raw, 'bsg');
   }
   if (economyConverted) {
     const networth = formatGoldNetworth(economy.totalValue ?? economy.value ?? 0);

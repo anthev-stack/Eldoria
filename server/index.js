@@ -6,7 +6,7 @@ import path from 'path';
 import http from 'http';
 import { fileURLToPath } from 'url';
 import { WebSocketServer } from 'ws';
-import { normalizePlayer, SKILL_LABELS, LEVELZ_SKILLS, aggregateEconomy } from './lib/levelz.js';
+import { normalizePlayer, SKILL_LABELS, LEVELZ_SKILLS, aggregateEconomy, normalizeEconomyResponse } from './lib/levelz.js';
 import { seedContentIfEmpty, seedTitlesIfEmpty, assignDefaultStaffTitles } from './lib/store.js';
 import { createAuthRouter } from './routes/auth.js';
 import { createPostsRouter, createChatRouter } from './routes/social.js';
@@ -176,7 +176,7 @@ app.get('/api/server', async (_req, res) => {
         version: bridgeServer.version ?? '—',
         totalPlayers: bridgeServer.totalPlayers ?? players.length,
         statsUpdatedAt: bridgeServer.statsUpdatedAt ?? updatedAt,
-        economy: bridgeServer.economy ?? economy,
+        economy: normalizeEconomyResponse(bridgeServer.economy) ?? economy,
         address: MC_PORT === 25565 ? MC_HOST : `${MC_HOST}:${MC_PORT}`,
         source: 'bridge',
       });

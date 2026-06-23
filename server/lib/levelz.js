@@ -149,6 +149,26 @@ export function aggregateEconomy(players) {
   };
 }
 
+export function normalizeEconomyResponse(economy) {
+  if (!economy) return null;
+  const value = Number(economy.totalValue ?? economy.value ?? 0);
+  const converted = splitCurrencyValue(value);
+  const raw = economy.raw ?? {
+    gold: Number(economy.rawGold ?? economy.gold ?? converted.gold),
+    silver: Number(economy.rawSilver ?? economy.silver ?? converted.silver),
+    bronze: Number(economy.rawBronze ?? economy.bronze ?? converted.bronze),
+  };
+  return {
+    raw,
+    gold: converted.gold,
+    silver: converted.silver,
+    bronze: converted.bronze,
+    value: converted.value,
+    totalValue: converted.value,
+    totalPlaytimeMinutes: Number(economy.totalPlaytimeMinutes ?? 0),
+  };
+}
+
 export function formatCurrency(currency) {
   if (!currency || !currency.value) return '—';
   const parts = [];
