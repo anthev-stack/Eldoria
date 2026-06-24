@@ -1,4 +1,5 @@
 import { getUser, onAuthChange, setMinecraftUsername, loginUrl, canPost } from './auth.js';
+import { renderPlayerDetailHtml } from './player-stats-ui.js';
 
 const config = window.ELDORIA_CONFIG;
 
@@ -12,6 +13,71 @@ function apiBase() {
 
 function headUrl(name) {
   return `https://mc-heads.net/avatar/${encodeURIComponent(name)}/64`;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+async function fetchOnlineNames() {
+  try {
+    const res = await fetch(`${apiBase()}/server`);
+    if (!res.ok) return new Set();
+    const data = await res.json();
+    return new Set((data.playersOnlineList ?? []).map((p) => p.name_clean ?? p.name));
+  } catch {
+    return new Set();
+  }
+}
+
+async function loadPlayerStats() {
+  const panel = $('settings-player-stats');
+  const body = $('settings-player-stats-body');
+  const user = getUser();
+  if (!panel || !body) return;
+
+  if (!user) {
+    panel.setAttribute('hidden', '');
+    return;
+  }
+
+  panel.removeAttribute('hidden');
+
+  const mcName = user.minecraftUsername?.trim();
+  if (!mcName) {
+    body.innerHTML =
+      '<p class="table-empty">Save your Minecraft username to see your LevelZ stats here.</p>';
+    return;
+  }
+
+  body.innerHTML = '<p class="table-empty">Loading player stats…</p>';
+
+  try {
+    const [playersRes, onlineNames] = await Promise.all([
+      fetch(`${apiBase()}/players`),
+      fetchOnlineNames(),
+    ]);
+    if (!playersRes.ok) throw new Error();
+    const data = await playersRes.json();
+    const players = data.players ?? [];
+    const player = players.find((p) => p.name.toLowerCase() === mcName.toLowerCase());
+
+    if (!player) {
+      body.innerHTML = `<p class="table-empty">No stats found for <strong>${escapeHtml(mcName)}</strong> yet. Join the server once your account has synced.</p>`;
+      return;
+    }
+
+    body.innerHTML = renderPlayerDetailHtml({
+      ...player,
+      online: onlineNames.has(player.name) || player.online,
+    });
+  } catch {
+    body.innerHTML = '<p class="table-empty">Could not load player stats.</p>';
+  }
 }
 
 function renderSettings() {
@@ -56,6 +122,8 @@ function renderSettings() {
   } else {
     staffSection?.setAttribute('hidden', '');
   }
+
+  loadPlayerStats();
 }
 
 function handleSetupParam() {

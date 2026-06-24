@@ -425,6 +425,7 @@ a:hover { color: var(--brand-hover); }
 }
 
 .settings-card[hidden],
+.settings-stats-card[hidden],
 #dashboard-content[hidden],
 #dashboard-denied[hidden] {
   display: none !important;
@@ -1239,6 +1240,9 @@ a:hover { color: var(--brand-hover); }
   .hero-inner {
     gap: 1.25rem;
   }
+  .settings-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1327,8 +1331,64 @@ a:hover { color: var(--brand-hover); }
 
 /* ─── Settings ─────────────────────────────────────────────────────────────── */
 
+.settings-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 520px) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.settings-layout-main .settings-card {
+  max-width: none;
+}
+
 .settings-card {
   max-width: 520px;
+}
+
+.settings-stats-card {
+  min-width: 0;
+}
+
+.settings-stats-skills-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 1.25rem 0 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.settings-player-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.settings-player-extra-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
+.settings-player-extra-label {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.settings-stats-card .modal-player-head img {
+  width: 64px;
+  height: 64px;
+}
+
+.settings-stats-card .modal-skills-grid {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
 }
 
 .settings-body {
