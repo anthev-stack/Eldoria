@@ -25,20 +25,6 @@ function currencyCoinImg(type) {
   return `<img class="currency-coin currency-coin-${type}" src="${CURRENCY_ICON_BASE}/${type}.png" alt="" loading="lazy" decoding="async" />`;
 }
 
-function currencyPart(amount, type) {
-  return `<span class="currency-part"><span class="currency-amount">${amount}</span>${currencyCoinImg(type)}</span>`;
-}
-
-export function formatCurrency(currency) {
-  const { value, gold, silver, bronze } = resolveCurrency(currency ?? {});
-  if (!value) return '—';
-  const parts = [];
-  if (gold) parts.push(currencyPart(gold, 'gold'));
-  if (silver) parts.push(currencyPart(silver, 'silver'));
-  if (bronze || !parts.length) parts.push(currencyPart(bronze, 'bronze'));
-  return `<span class="currency-display">${parts.join('')}</span>`;
-}
-
 export function renderCurrencyStack(currency) {
   const { value, gold, silver, bronze } = resolveCurrency(currency ?? {});
   if (!value) return '<span class="currency-stack-empty">—</span>';
@@ -77,7 +63,7 @@ export function renderPlayerDetailHtml(player) {
       <img src="${headUrl(player.name, 64)}" alt="" width="64" height="64" />
       <div>
         <h3>${player.name}${onlineBadge}</h3>
-        <p>Level ${player.levelz.level} · ${player.levelz.experience.toLocaleString()} XP · ${formatCurrency(player.currency)} · ${formatPlaytime(player.playtimeMinutes)} played</p>
+        <p>Level ${player.levelz.level} · ${player.levelz.experience.toLocaleString()} XP · ${formatPlaytime(player.playtimeMinutes)} played</p>
       </div>
     </div>
     <div class="settings-player-extra">
